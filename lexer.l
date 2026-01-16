@@ -1,11 +1,12 @@
 /*
- * Flex scanner for the simplified “P‑de‑Prova” language.
+ * Analisador léxico pra a linguagem “P‑de‑Prova”.
  *
- * The scanner recognises keywords, identifiers, numeric literals,
- * operators and punctuation.  It also handles preprocessor
- * directives such as #include and #define.  White space and C‑style
- * comments are skipped.  Tokens are passed to the parser defined in
- * parser.y via yylex().
+ * Este scanner reconhece palavras‑chave, identificadores, literais
+ * numéricos, operadores e sinais de pontuação.  Também trata
+ * diretivas de pré‑processamento como #include e #define.  Espaços em
+ * branco e comentários no estilo C/C++ são ignorados.  Os tokens
+ * reconhecidos são repassados ao analisador sintático definido em
+ * parser.y através da função yylex().
  */
 
 %{
@@ -21,14 +22,15 @@
 
 %%
 
- /* Preprocessor directives.  Match '#include' followed by the remainder
- * of the line (dot does not match newline in flex) so that the header
- * specification does not emit stray tokens.  '#define' is returned on
- * its own; the identifier and value are handled by other rules. */
+ /* A expressão "#include" casa com
+ * o restante da linha (o ponto não casa com nova linha em flex) para
+ * que o nome do cabeçalho não gere tokens indesejados.  "#define" é
+ * retornado isoladamente; o identificador e o valor são processados
+ * por outras regras. */
 "#include".*               { return INCLUDE; }
 "#define"                 { return DEFINE; }
 
- /* Keywords */
+ /* Palavras‑chave */
 "void"                     { return T_VOID; }
 "int"                      { return T_INT; }
 "float"                    { return T_FLOAT; }
@@ -37,7 +39,7 @@
 "return"                   { return T_RETURN; }
 "main"                     { return T_MAIN; }
 
- /* Multi-character operators.  Order matters: match longer tokens first. */
+ /* Operadores com dois caracteres.  A ordem importa:operadores mais longos primeiro. */
 "&&"                      { return AND_OP; }
 "||"                      { return OR_OP; }
 "=="                      { return EQ_OP; }
@@ -47,14 +49,14 @@
 "++"                      { return INC_OP; }
 "--"                      { return DEC_OP; }
 
- /* Numeric literals (integer constants). */
+ /* Literais numéricos (constantes inteiras). */
 [0-9]+                      { yylval.intVal = atoi(yytext); return NUMBER; }
 
- /* Identifiers.  Start with a letter or underscore followed by letters,
- * digits or underscores. */
+ /* Identificadores.  Iniciam por uma letra ou sublinhado e são
+ * seguidos por letras, dígitos ou sublinhados. */
 [A-Za-z_][A-Za-z0-9_]*      { yylval.strVal = strdup(yytext); return IDENTIFIER; }
 
- /* Single-character tokens.  Return the literal character itself. */
+ /* Tokens de um único caractere.  Retornam o próprio literal. */
 "["                       { return '['; }
 "]"                       { return ']'; }
 "("                       { return '('; }
@@ -71,17 +73,18 @@
 ">"                       { return '>'; }
 "="                       { return '='; }
 
- /* Skip whitespace */
+ /* Ignora espaços em branco */
 [ \t\r\n]+                { /* ignore */ }
 
- /* Skip C++ style single-line comments */
+ /* Ignora comentários de linha (estilo C++) */
 "//".*                  { /* ignore */ }
 
- /* Skip C style multi-line comments */
+ /* Ignora comentários de múltiplas linhas (estilo C) */
 "/*"([^*]|[*][^/])*"*/"  { /* ignore */ }
 
- /* Ignore any unrecognised character.  Syntax errors will be reported
- * by the parser when it sees unexpected tokens. */
+ /* Ignora qualquer caractere não reconhecido.  Os erros de sintaxe
+ * serão reportados pelo analisador quando encontrar tokens
+ * inesperados. */
 .                           { /* ignore */ }
 
 %%
