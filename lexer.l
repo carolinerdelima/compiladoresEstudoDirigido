@@ -10,23 +10,17 @@
  */
 
 %{
-#include "parser.tab.h"    /* Bison interface (token definitions) */
+#include "parser.tab.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* We rely on the default yylex() signature provided by Flex. */
 %}
 
 %option noyywrap
 
 %%
 
- /* A expressão "#include" casa com
- * o restante da linha (o ponto não casa com nova linha em flex) para
- * que o nome do cabeçalho não gere tokens indesejados.  "#define" é
- * retornado isoladamente; o identificador e o valor são processados
- * por outras regras. */
 "#include".*               { return INCLUDE; }
 "#define"                 { return DEFINE; }
 
@@ -39,7 +33,7 @@
 "return"                   { return T_RETURN; }
 "main"                     { return T_MAIN; }
 
- /* Operadores com dois caracteres.  A ordem importa:operadores mais longos primeiro. */
+ /* Operadores com dois caracteres.  A ordem importa: operadores mais longos primeiro. */
 "&&"                      { return AND_OP; }
 "||"                      { return OR_OP; }
 "=="                      { return EQ_OP; }

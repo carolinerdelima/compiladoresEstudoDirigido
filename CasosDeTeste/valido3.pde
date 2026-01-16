@@ -1,13 +1,3 @@
-/*
- * Valid example 3 for the P‑de‑Prova grammar
- *
- * This example shows a nested for loop inside a function and a
- * compound condition in the main function's loop.  Two constants (M
- * and N) define the bounds of the loops.  The variable 'value' is
- * updated inside the nested loops and again in main.  The grammar
- * allows nested for loops and compound conditions in the for loop.
- */
-
 #include <stdio.h>
 #define M 3
 #define N 4
